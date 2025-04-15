@@ -1,0 +1,167 @@
+-- GUI + Logic pour jouer un son personnalisé
+-- Créé par 298 - V1
+
+-- Création des instances GUI
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local SoundID = Instance.new("TextLabel")
+local IDbox = Instance.new("TextBox")
+local SoundVolume = Instance.new("TextLabel")
+local Volumebox = Instance.new("TextBox")
+local SoundPitch = Instance.new("TextLabel")
+local Pitchbox = Instance.new("TextBox")
+local PlayBTN = Instance.new("TextButton")
+local StopBTN = Instance.new("TextButton")
+local SoundLoop = Instance.new("TextLabel")
+local LoopedBTN = Instance.new("TextButton")
+local UnLoopedBTN = Instance.new("TextButton")
+local TxSound = Instance.new("TextLabel")
+local v1 = Instance.new("TextLabel")
+local Credit = Instance.new("TextLabel")
+
+-- Variables internes
+local Sound = Instance.new("Sound")
+Sound.Parent = game.Workspace
+Sound.Name = "TxCustomSound"
+Sound.Volume = 1
+Sound.Looped = false
+
+-- GUI Parent
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Position et style du GUI
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BackgroundTransparency = 0.450
+Frame.BorderColor3 = Color3.fromRGB(255, 0, 4)
+Frame.BorderSizePixel = 2
+Frame.Position = UDim2.new(0.005, 0, 0.29, 0)
+Frame.Size = UDim2.new(0, 250, 0, 339)
+
+-- Fonctions utilitaires pour créer les composants
+local function styleLabel(label, text, pos)
+	label.Parent = Frame
+	label.BackgroundTransparency = 1.000
+	label.Position = pos
+	label.Size = UDim2.new(0, 103, 0, 24)
+	label.Font = Enum.Font.SciFi
+	label.Text = text
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.TextScaled = true
+end
+
+local function styleBox(box, defaultText, pos)
+	box.Parent = Frame
+	box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	box.BackgroundTransparency = 0.450
+	box.BorderColor3 = Color3.fromRGB(255, 0, 4)
+	box.BorderSizePixel = 2
+	box.Position = pos
+	box.Size = UDim2.new(0, 122, 0, 35)
+	box.Font = Enum.Font.SciFi
+	box.Text = defaultText
+	box.TextColor3 = Color3.fromRGB(255, 255, 255)
+	box.TextScaled = true
+end
+
+-- ID
+styleLabel(SoundID, "Sound ID", UDim2.new(0, 0, 0.19, 0))
+styleBox(IDbox, "ID", UDim2.new(0.445, 0, 0.174, 0))
+
+-- Volume
+styleLabel(SoundVolume, "Volume", UDim2.new(0, 0, 0.337, 0))
+styleBox(Volumebox, "1 - 10", UDim2.new(0.442, 0, 0.321, 0))
+
+-- Pitch
+styleLabel(SoundPitch, "Pitch", UDim2.new(0, 0, 0.485, 0))
+styleBox(Pitchbox, "", UDim2.new(0.438, 0, 0.469, 0))
+
+-- Loop info
+styleLabel(SoundLoop, "Looped", UDim2.new(0.015, 0, 0.637, 0))
+
+-- Loop Buttons
+LoopedBTN.Parent = Frame
+LoopedBTN.Position = UDim2.new(0.507, 0, 0.635, 0)
+LoopedBTN.Size = UDim2.new(0, 33, 0, 29)
+LoopedBTN.Font = Enum.Font.SciFi
+LoopedBTN.Text = "YES"
+LoopedBTN.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LoopedBTN.BackgroundTransparency = 0.450
+LoopedBTN.BorderColor3 = Color3.fromRGB(255, 0, 4)
+LoopedBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoopedBTN.TextScaled = true
+
+UnLoopedBTN.Parent = Frame
+UnLoopedBTN.Position = UDim2.new(0.703, 0, 0.635, 0)
+UnLoopedBTN.Size = UDim2.new(0, 33, 0, 29)
+UnLoopedBTN.Font = Enum.Font.SciFi
+UnLoopedBTN.Text = "NO"
+UnLoopedBTN.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+UnLoopedBTN.BackgroundTransparency = 0.450
+UnLoopedBTN.BorderColor3 = Color3.fromRGB(255, 0, 4)
+UnLoopedBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+UnLoopedBTN.TextScaled = true
+
+-- Play Button
+PlayBTN.Parent = Frame
+PlayBTN.Position = UDim2.new(0.546, 0, 0.784, 0)
+PlayBTN.Size = UDim2.new(0, 94, 0, 29)
+PlayBTN.Font = Enum.Font.SciFi
+PlayBTN.Text = "Play"
+PlayBTN.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+PlayBTN.BackgroundTransparency = 0.450
+PlayBTN.BorderColor3 = Color3.fromRGB(255, 0, 4)
+PlayBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayBTN.TextScaled = true
+
+-- Stop Button
+StopBTN.Parent = Frame
+StopBTN.Position = UDim2.new(0.07, 0, 0.787, 0)
+StopBTN.Size = UDim2.new(0, 94, 0, 29)
+StopBTN.Font = Enum.Font.SciFi
+StopBTN.Text = "Stop"
+StopBTN.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StopBTN.BackgroundTransparency = 0.450
+StopBTN.BorderColor3 = Color3.fromRGB(255, 0, 4)
+StopBTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+StopBTN.TextScaled = true
+
+-- Titre
+styleLabel(TxSound, "Tx Sound", UDim2.new(0.15, 0, 0, 0))
+TxSound.Size = UDim2.new(0, 160, 0, 49)
+
+-- Version
+styleLabel(v1, "V1", UDim2.new(0.735, 0, 0.024, 0))
+v1.Size = UDim2.new(0, 45, 0, 18)
+
+-- Crédits
+styleLabel(Credit, "By 298", UDim2.new(0.795, 0, 0.937, 0))
+Credit.Size = UDim2.new(0, 46, 0, 21)
+
+-- Boutons logiques
+LoopedBTN.MouseButton1Click:Connect(function()
+	Sound.Looped = true
+end)
+
+UnLoopedBTN.MouseButton1Click:Connect(function()
+	Sound.Looped = false
+end)
+
+PlayBTN.MouseButton1Click:Connect(function()
+	local id = IDbox.Text
+	local vol = tonumber(Volumebox.Text)
+	local pitch = tonumber(Pitchbox.Text)
+
+	if id and vol and pitch then
+		Sound:Stop()
+		Sound.SoundId = "rbxassetid://" .. id
+		Sound.Volume = math.clamp(vol, 0, 10)
+		Sound.PlaybackSpeed = pitch
+		Sound:Play()
+	end
+end)
+
+StopBTN.MouseButton1Click:Connect(function()
+	Sound:Stop()
+end)
